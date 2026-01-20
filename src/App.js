@@ -56,6 +56,7 @@ function App() {
   const tokenCount = tokens.length;
   const charCount = text.length;
   const tokenIds = tokens.map(token => token.id);
+  const vocabulary = [...new Set(tokens.map(token => token.text))].sort();
 
   const handleClear = () => {
     setText("");
@@ -87,7 +88,7 @@ function App() {
               </defs>
             </svg>
           </div>
-          <h1>AI Tokenizer</h1>
+          <h1>AI Tokenizer <span className="powered-by">(Powered By Alumnx)</span></h1>
         </div>
         <p>Visualize how AI models process and tokenize text, transforming words and sentences into interpretable patterns for machine understanding.</p>
       </header>
@@ -122,6 +123,7 @@ function App() {
         <div className="stats">
           <span className="pill">Tokens: {tokenCount}</span>
           <span className="pill">Characters: {charCount}</span>
+          <span className="pill">Vocabulary: {vocabulary.length}</span>
         </div>
 
         {/* Controls */}
@@ -191,6 +193,20 @@ function App() {
             <p>Enter text to see token breakdown</p>
           )}
         </section>
+
+        {/* Vocabulary */}
+        {vocabulary.length > 0 && (
+          <section className="breakdown">
+            <h3>Vocabulary ({vocabulary.length} unique tokens)</h3>
+            <div className="vocabulary-container">
+              {vocabulary.map((word, index) => (
+                <span key={index} className="vocab-item">
+                  {word}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
