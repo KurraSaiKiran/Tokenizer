@@ -439,6 +439,30 @@ select:hover {
   box-shadow: 0 4px 16px rgba(139,92,246,0.4);
 }
 
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 20px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  margin: 16px 0;
+}
+
+.loading p {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .app-container {

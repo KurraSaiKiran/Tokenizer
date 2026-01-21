@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
+const API_BASE_URL = "https://ai-tokenizer-hge5.onrender.com";
+
 function App() {
   const [text, setText] = useState("");
   const [selectedModel, setSelectedModel] = useState("GPT-4");
   const [showText, setShowText] = useState(true);
   const [tokens, setTokens] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const models = ["GPT-4", "GPT-3.5-Turbo", "GPT-4-Turbo", "Claude-3"];
   
@@ -15,42 +18,44 @@ function App() {
     "Artificial intelligence is transforming the world."
   ];
 
-  // Simple tokenization logic (mimics AI tokenization)
-  const tokenizeText = (inputText, model) => {
+  // API call to tokenize text
+  const tokenizeText = async (inputText, model) => {
     if (!inputText.trim()) return [];
     
-    // Different tokenization patterns based on model
-    let tokenizedResult = [];
-    let tokenId = 1;
-    
-    if (model === "Claude-3") {
-      // Claude tends to split more aggressively
-      const words = inputText.split(/\s+/);
-      words.forEach(word => {
-        if (word.length > 4) {
-          const mid = Math.ceil(word.length / 2);
-          tokenizedResult.push({ id: tokenId++, text: word.slice(0, mid) });
-          tokenizedResult.push({ id: tokenId++, text: word.slice(mid) });
-        } else {
-          tokenizedResult.push({ id: tokenId++, text: word });
-        }
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/tokenize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: inputText,
+          model: model.toLowerCase(),
+          strategy: 'default'
+        })
       });
-    } else {
-      // GPT models - word and punctuation based
-      const parts = inputText.split(/(\s+|[.,!?;:])/).filter(part => part.length > 0);
-      parts.forEach(part => {
-        if (part.trim()) {
-          tokenizedResult.push({ id: tokenId++, text: part });
-        }
-      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to tokenize text');
+      }
+      
+      const data = await response.json();
+      return data.tokens || [];
+    } catch (error) {
+      console.error('Error tokenizing text:', error);
+      return [];
+    } finally {
+      setLoading(false);
     }
-    
-    return tokenizedResult;
   };
 
   useEffect(() => {
-    const newTokens = tokenizeText(text, selectedModel);
-    setTokens(newTokens);
+    if (text.trim()) {
+      tokenizeText(text, selectedModel).then(setTokens);
+    } else {
+      setTokens([]);
+    }
   }, [text, selectedModel]);
 
   const tokenCount = tokens.length;
@@ -148,6 +153,13 @@ function App() {
             </select>
           </div>
         </div>
+
+        {/* Loading indicator */}
+        {loading && (
+          <div className="loading">
+            <p>Tokenizing text...</p>
+          </div>
+        )}
 
         {/* Token Visualization */}
         {tokens.length > 0 && (
