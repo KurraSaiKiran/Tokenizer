@@ -1,8 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities; 
-
-{
+* {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -141,23 +137,6 @@ body {
   font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, monospace;
   line-height: 1.6;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  background-image: linear-gradient(rgba(255,255,255,0.95), rgba(255,255,255,0.95)),
-                    conic-gradient(from 0deg, #ff0000, #ff8800, #ffff00, #00ff00, #0088ff, #0000ff, #8800ff, #ff0088, #ff0000);
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  background-size: 100% 100%, 100% 100%;
-  animation: rainbowBorder 6s linear infinite;
-}
-
-@keyframes rainbowBorder {
-  0% {
-    background-position: 0% 0%, center;
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    background-position: 0% 0%, center;
-    filter: hue-rotate(360deg);
-  }
 }
 
 .text-input:focus {
